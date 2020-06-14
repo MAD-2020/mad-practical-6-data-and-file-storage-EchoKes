@@ -4,4 +4,107 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Main4Activity"/>
+    tools:context=".Main2Activity">
+
+    <Button
+        android:id="@+id/b1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/b2"
+        app:layout_constraintEnd_toStartOf="@+id/b2"
+        app:layout_constraintTop_toTopOf="@+id/b2" />
+
+    <Button
+        android:id="@+id/b2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/b5"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/b3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/b2"
+        app:layout_constraintStart_toEndOf="@+id/b2"
+        app:layout_constraintTop_toTopOf="@+id/b2" />
+
+    <Button
+        android:id="@+id/b4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/b5"
+        app:layout_constraintEnd_toStartOf="@+id/b5"
+        app:layout_constraintTop_toTopOf="@+id/b5" />
+
+    <Button
+        android:id="@+id/b5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.448" />
+
+    <Button
+        android:id="@+id/b6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/b5"
+        app:layout_constraintStart_toEndOf="@+id/b5"
+        app:layout_constraintTop_toTopOf="@+id/b5" />
+
+    <Button
+        android:id="@+id/b7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/b8"
+        app:layout_constraintEnd_toStartOf="@+id/b8"
+        app:layout_constraintTop_toTopOf="@+id/b8" />
+
+    <Button
+        android:id="@+id/b8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/b5" />
+
+    <Button
+        android:id="@+id/b9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        app:layout_constraintBottom_toBottomOf="@+id/b8"
+        app:layout_constraintStart_toEndOf="@+id/b8"
+        app:layout_constraintTop_toTopOf="@+id/b8" />
+
+    <TextView
+        android:id="@+id/TV_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text=""
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/b8" />
+
+    <Button
+        android:id="@+id/btn_gameBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="BACK"
+        app:layout_constraintEnd_toEndOf="@+id/TV_score"
+        app:layout_constraintStart_toStartOf="@+id/TV_score"
+        app:layout_constraintTop_toBottomOf="@+id/TV_score" />
+</androidx.constraintlayout.widget.ConstraintLayout>

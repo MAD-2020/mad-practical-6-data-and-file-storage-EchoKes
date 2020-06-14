@@ -45,68 +45,105 @@ public class MyDBHandler extends SQLiteOpenHelper {
 
     private static final String FILENAME = "MyDBHandler.java";
     private static final String TAG = "Whack-A-Mole3.0!";
+    private static final int DATABASE_VERSION = 1;
+    private static final String DATABASE_NAME = "Whack-A-Mole.db";
+    private static final String TABLE_NAME = "Users";
+    private static final String USERNAME = "Username";
+    private static final String PASSWORD = "Password";
+    private static final String LEVEL = "Level" ;
+    private static final String SCORE = "Score";
 
-    public MyDBHandler(Context context, String name, SQLiteDatabase.CursorFactory factory, int version)
+    public MyDBHandler(Context context)
     {
-        /* HINT:
-            This is used to init the database.
-         */
+        super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
+
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        /* HINT:
-            This is triggered on DB creation.
-            Log.v(TAG, "DB Created: " + CREATE_ACCOUNTS_TABLE);
-         */
+        String CREATE_PRODUCTS_TABLE = "CREATE TABLE " + TABLE_NAME +
+                "(Username TEXT," +
+                " Password TEXT," +
+                " Level INTEGER," +
+                " Score INTEGER)";
 
+        db.execSQL(CREATE_PRODUCTS_TABLE);
+        Log.v(TAG, "DB Created: " + TABLE_NAME);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        /* HINT:
-            This is triggered if there is a new version found. ALL DATA are replaced and irreversible.
-         */
+        db.execSQL( "DROP TABLE IF EXISTS " + TABLE_NAME);
+        onCreate(db);
     }
 
     public void addUser(UserData userData)
     {
-            /* HINT:
-                This adds the user to the database based on the information given.
-                Log.v(TAG, FILENAME + ": Adding data for Database: " + values.toString());
-             */
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        for(int i = 0; i < userData.getLevels().size(); i++) {
+            ContentValues values = new ContentValues();
+            values.put(USERNAME, userData.getMyUserName());
+            values.put(PASSWORD, userData.getMyPassword());
+            values.put(LEVEL, userData.getLevels().get(i));
+            values.put(SCORE, userData.getScores().get(i));
+
+            Log.v(TAG, FILENAME + ": Adding data for Database: " + values.toString());
+
+            db.insert(TABLE_NAME,null, values);
+        }
+
+        db.close();
     }
 
     public UserData findUser(String username)
     {
-        /* HINT:
-            This finds the user that is specified and returns the data information if it is found.
-            If not found, it will return a null.
-            Log.v(TAG, FILENAME +": Find user form database: " + query);
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE "
+                + USERNAME + " = \"" + username + "\"";
 
-            The following should be used in getting the query data.
-            you may modify the code to suit your design.
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query,null);
+        if (cursor.moveToFirst()) {
+            UserData data = new UserData();
+            data.setMyUserName(cursor.getString(0));
+            data.setMyPassword(cursor.getString(1));
 
-            if(cursor.moveToFirst()){
-                do{
-                    ...
-                    .....
-                    ...
-                }while(cursor.moveToNext());
-                Log.v(TAG, FILENAME + ": QueryData: " + queryData.getLevels().toString() + queryData.getScores().toString());
+            do{
+                data.getLevels().add(cursor.getInt(2));
+                data.getScores().add(cursor.getInt(3));
             }
-            else{
-                Log.v(TAG, FILENAME+ ": No data found!");
-            }
-         */
+            while(cursor.moveToNext());
+            Log.v(TAG, FILENAME + ": QueryData: " + data.getLevels().toString() + data.getScores().toString());
+
+            return data;
+        }
+        else {
+            Log.v(TAG, FILENAME + ": No data found!");
+            return null;
+        }
     }
 
     public boolean deleteAccount(String username) {
-        /* HINT:
-            This finds and delete the user data in the database.
-            This is not reversible.
-            Log.v(TAG, FILENAME + ": Database delete user: " + query);
-         */
+        boolean result = false;
 
+        String query = "SELECT * FROM " + TABLE_NAME + " WHERE "
+                + USERNAME + " = '" + username + "' ";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        UserData data = new UserData();
+        if (cursor.moveToFirst()) {
+            data.setMyUserName(cursor.getString(0));
+            db.delete(TABLE_NAME, USERNAME + " = ?",
+                    new String[] { String.valueOf(data.getMyUserName())});
+            cursor.close();
+            Log.v(TAG, FILENAME + ": Database delete user: " + query);
+            result = true;
+        }
+
+        db.close();
+
+        return result;
     }
 }

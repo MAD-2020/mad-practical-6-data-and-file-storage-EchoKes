@@ -28,16 +28,33 @@ public class Main3Activity extends AppCompatActivity {
     private static final String FILENAME = "Main3Activity.java";
     private static final String TAG = "Whack-A-Mole3.0!";
 
+    RecyclerView recyclerView;
+    Button backBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main3);
-        /* Hint:
-        This method receives the username account data and looks up the database for find the
-        corresponding information to display in the recyclerView for the level selections page.
 
-        Log.v(TAG, FILENAME + ": Show level for User: "+ userName);
-         */
+        backBtn = findViewById(R.id.btn_backToLogin);
+        recyclerView = findViewById(R.id.recyclerView);
+
+        backBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent backToLogin = new Intent(Main3Activity.this, MainActivity.class);
+                startActivity(backToLogin);
+            }
+        });
+
+        UserData data = (UserData) getIntent().getSerializableExtra("data");
+        Log.v(TAG, FILENAME + ": Show level for User: "+ data.getMyUserName());
+
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        CustomScoreAdaptor customScoreAdaptor = new CustomScoreAdaptor(this, data);
+
+        recyclerView.setAdapter(customScoreAdaptor);
     }
 
     @Override

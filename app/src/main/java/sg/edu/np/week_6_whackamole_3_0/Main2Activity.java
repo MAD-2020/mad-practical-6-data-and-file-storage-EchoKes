@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main2Activity extends AppCompatActivity {
     /* Hint:
@@ -27,22 +29,68 @@ public class Main2Activity extends AppCompatActivity {
     private static final String FILENAME = "Main2Activity.java";
     private static final String TAG = "Whack-A-Mole3.0!";
 
+    EditText username,password;
+    Button createBtn,cancelBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
 
-        /* Hint:
-            This prepares the create and cancel account buttons and interacts with the database to determine
-            if the new user created exists already or is new.
-            If it exists, information is displayed to notify the user.
-            If it does not exist, the user is created in the DB with default data "0" for all levels
-            and the login page is loaded.
+        username = findViewById(R.id.ET_createUsername);
+        password = findViewById(R.id.ET_createPass);
+        createBtn = findViewById(R.id.btn_create);
+        cancelBtn = findViewById(R.id.btn_cancel);
 
-            Log.v(TAG, FILENAME + ": New user created successfully!");
-            Log.v(TAG, FILENAME + ": User already exist during new user creation!");
+        createBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String name = username.getText().toString();
+                String pass = password.getText().toString();
 
-         */
+                if(!isValidUser(name, pass)){
+                    MyDBHandler myDBHandler = new MyDBHandler(Main2Activity.this);
+
+                    ArrayList<Integer> levelList = new ArrayList<>(Arrays.asList(1,2,3,4,5,6,7,8,9,10));
+                    ArrayList<Integer> scoreList = new ArrayList<>(Arrays.asList(0,0,0,0,0,0,0,0,0,0));
+
+                    myDBHandler.addUser(new UserData(name , pass , levelList ,scoreList));
+
+                    Log.v(TAG, FILENAME + ": New user created successfully!");
+                    Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+                    startActivity(intent);
+                    Toast.makeText(Main2Activity.this, "User Created Successfully", Toast.LENGTH_SHORT).show();
+
+                }else{
+                    Log.v(TAG, FILENAME + ": User already exist during new user creation!");
+                    Toast.makeText(Main2Activity.this, "User Already Exist. Please Try Again", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        cancelBtn.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                username.setText("");
+                password.setText("");
+
+                Intent intent = new Intent(Main2Activity.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    public boolean isValidUser(String userName, String password){
+        MyDBHandler myDBHandler = new MyDBHandler(Main2Activity.this);
+        UserData data = myDBHandler.findUser(userName);
+        if (data == null) {
+            return false;
+        }
+        else {
+            Log.v(TAG, FILENAME + ": Running Checks..." + data.getMyUserName() + ": "
+                    + data.getMyPassword() +" <--> "+ userName + " " + password);
+            return true;
+        }
     }
 
     protected void onStop() {
